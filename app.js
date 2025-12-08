@@ -367,8 +367,12 @@ function animateValue(element, start, end, duration, suffix = "") {
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    const value = Math.floor(progress * (end - start) + start);
-    element.textContent = value + suffix;
+    const value = progress * (end - start) + start;
+    if (end % 1 !== 0) {
+      element.textContent = rawValue.toFixed(1) + suffix; // decimals
+    } else {
+      element.textContent = Math.floor(rawValue) + suffix; // integers
+    }
     if (progress < 1) {
       window.requestAnimationFrame(step);
     }
