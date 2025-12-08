@@ -368,11 +368,10 @@ function animateValue(element, start, end, duration, suffix = "") {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
     const value = progress * (end - start) + start;
-    if (end % 1 !== 0) {
-      element.textContent = rawValue.toFixed(1) + suffix; // decimals
-    } else {
-      element.textContent = Math.floor(rawValue) + suffix; // integers
-    }
+    element.textContent = isDecimal
+      ? value.toFixed(1) + suffix
+      : Math.floor(value) + suffix;
+    
     if (progress < 1) {
       window.requestAnimationFrame(step);
     }
@@ -406,7 +405,9 @@ function initCounterAnimations() {
           }
 
           target.textContent = "0" + suffix;
-          animateValue(target, 0, numericValue, 2000, suffix);
+
+          animateValue(target, 0, numericValue, 2000, suffix, isDecimal);
+          // animateValue(target, 0, numericValue, 2000, suffix);
           statsObserver.unobserve(target);
         }
       });
